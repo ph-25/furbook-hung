@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('header')
-	@if(isset($breed))
+	@if(isset($giong))
 		<a href="{{url('/')}}" >Back to the overview</a>
 	@endif
 	<h2>
-	  All @if (isset($breed)) {{$breed->name}} @endif Cats
+	  All @if (isset($giong)) {{$giong->name}} @endif Cats
 	  <a href="{{url('cats/create')}}"class="btn btn-primary pull-right">
 	  	Add a new cat
 	  </a>
@@ -28,7 +28,7 @@
  			<td>{{$cat->id}}</td>
  			<td>{{$cat->name}}</td>
  			<td>{{$cat->date_of_birth}}</td>
- 			<td>{{$cat->breed->name}}</td>
+ 			<td><a href="{{ url('cats/breeds/'.$cat->breed->name) }}">{{$cat->breed->name}}</a></td>
  			<td><a class="btn btn-warning" href="{{ url('cats/'.$cat->id.'/edit') }}">Edit</a></td>
  			<td><a class="btn btn-danger" href="{{ url('cats/'.$cat->id.'/delete') }}">Delete</a></td>
 

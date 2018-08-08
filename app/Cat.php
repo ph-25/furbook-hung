@@ -11,3 +11,4 @@ class Cat extends Model
     	return $this->belongsTo('Furbook\Breed');
     }
 } 
+ 

@@ -41,9 +41,10 @@ Route::get('cats/breeds/{name}', function ($name) {
 	->where('name',$name)
 	->first();
 
-	return view('cats.index')
-	->with('breed',$breed)
-	->with('meo',$breed->cats);
+	return view('cats.index') // gọi view index với 2 tham số truyền vào
+	->with('giong',$breed) // tham số 1 có key là breed, value truyền vào là đối tượng $breeds
+	->with('meo',$breed->cats);//tham số 2 có key là meo, value truyền vào là $breed->cats
+	                           // là phương thức cats của lớp breed
    
 });
 

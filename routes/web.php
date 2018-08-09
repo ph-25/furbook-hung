@@ -92,9 +92,8 @@ Route::put('/cats/{id}',function($id){
 Route::get('/cats/{cat}/delete',function(Furbook\Cat $cat){
 	$cat->delete();
 	return redirect('cats')
-	->withSuccess('Da xoa xong em cat success');
+	->withSuccess('Đã xóa xong 1 em cat success');
 });
 
-
-
-
+// Route goi controller MyFirstCon
+//Route::resource('cat','CatController');

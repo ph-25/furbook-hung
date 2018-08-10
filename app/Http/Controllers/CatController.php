@@ -3,6 +3,10 @@
 namespace Furbook\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Furbook\Http\Requests\CatRequest; //Dùng class CatRequest đã tạo
+use Furbook\Cat;
+use DB;
+use Validator; // đây là 1 Trait ddeer valid
 
 class CatController extends Controller
 {
@@ -13,7 +17,9 @@ class CatController extends Controller
      */
     public function index()
     {
-        //
+        //Get all cats
+        $cats=Cat::all();
+        return view('cats/index')->with('meo', $cats);
     }
 
     /**
@@ -23,7 +29,7 @@ class CatController extends Controller
      */
     public function create()
     {
-        //
+        return view('cats.create');
     }
 
     /**
@@ -34,7 +40,34 @@ class CatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        // Define rule of create cat
+        $validator = Validator::make(
+            $data,
+            [
+                'name' => 'required|max:255|unique:cats,name',
+                'date_of_birth' => 'required|date:"YY-mm-dd"',
+                'breed_id' => 'required|numeric'
+            ],
+            [
+                'required' => 'Cột :attribute là bắt buộc.'
+            ]
+        );
+        
+        // Check validation
+         if ($validator->fails()) {
+            return redirect()
+                        ->route('cat.create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        // Create new cat
+        $cat = Cat::create($data);
+        return redirect()
+            ->route('cat.show', $cat->id)
+            ->withSuccess('Create cat success');
     }
 
     /**
@@ -43,9 +76,10 @@ class CatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Cat $cat)
     {
-        //
+           return view('cats.show')
+            ->with('cat', $cat);
     }
 
     /**
@@ -56,7 +90,9 @@ class CatController extends Controller
      */
     public function edit($id)
     {
-        //
+        $cat = Cat::find($id);
+        return view('cats.edit') 
+            ->with('cat', $cat);
     }
 
     /**
@@ -66,11 +102,16 @@ class CatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    
+    public function update(CatRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $cat = Cat::find($id);
+        $cat->update($data);
+        return redirect()
+            ->route('cat.show', $cat->id)
+            ->withSuccess('Update cat success');
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -79,6 +120,10 @@ class CatController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cat = Cat::find($id);
+        $cat->delete();
+        return redirect()
+            ->route('cat.index')
+            ->withSuccess('Delete cat success');
     }
 }

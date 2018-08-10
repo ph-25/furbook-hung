@@ -13,7 +13,7 @@ class CatRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true; // Tại sao cái này phải là true (mặc định là false)
     }
 
     /**
